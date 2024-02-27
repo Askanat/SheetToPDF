@@ -3,6 +3,24 @@ chcp 65001 >nul
 SETLOCAL EnableExtensions
 cls
 
+echo.
+echo ---------------------------------------------------------
+echo Ce logiciel est sous licence MIT. Pour plus d'informations, consultez le fichier LICENSE.
+echo Retrouvez-moi sur:
+echo Gitea: https://gitea.askanat.com/
+echo LinkedIn: www.linkedin.com/in/florian-vaissiere-2bab64122
+echo ---------------------------------------------------------
+echo.
+
+echo  ███████╗██╗  ██╗███████╗███████╗████████╗    ████████╗ ██████╗  ██████╗ ██╗     
+echo ██╔════╝██║  ██║██╔════╝██╔════╝╚══██╔══╝    ╚══██╔══╝██╔═══██╗██╔═══██╗██║     
+echo ███████╗███████║█████╗  █████╗     ██║          ██║   ██║   ██║██║   ██║██║     
+echo ╚════██║██╔══██║██╔══╝  ██╔══╝     ██║          ██║   ██║   ██║██║   ██║██║     
+echo ███████║██║  ██║███████╗███████╗   ██║          ██║   ╚██████╔╝╚██████╔╝███████╗
+echo ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝   ╚═╝          ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝
+echo.
+
+echo ---------------------------------------------------------
 echo Bienvenue dans l'assistant de conversion Excel vers PDF!
 echo ---------------------------------------------------------
 echo.

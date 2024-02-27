@@ -1,3 +1,16 @@
+#####################################################################
+# Sheet To PDF converter                                            #
+#                                                                   #
+# Ce script convertit des feuilles Excel en documents PDF.          #
+#                                                                   #
+# Licence: MIT                                                      #
+#                                                                   #
+# Auteur: Florian Vaissiere                                         #
+# GitHub: https://github.com/Askanat                                #
+# Gitea: https://gitea.askanat.com                                  #
+# LinkedIn: www.linkedin.com/in/florian-vaissiere-2bab64122         #
+#####################################################################
+
 import win32com.client
 import os
 import sys

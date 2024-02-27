@@ -2,6 +2,16 @@
 
 Ce projet fournit un ensemble de scripts permettant de convertir des feuilles Excel en documents PDF. Le processus est automatisé à l'aide d'un script batch (`converter.bat`) qui prépare l'environnement et lance le script Python (`SheetToPDF.py`) pour effectuer la conversion.
 
+---
+
+## Licence
+
+Ce projet est sous licence MIT. Cela signifie que vous êtes libre de l'utiliser, de le modifier et de le distribuer, à condition d'inclure l'avis de licence original et les conditions de la licence dans toute copie ou version substantielle du logiciel.
+
+Pour plus de détails sur la licence, veuillez consulter le fichier `LICENSE` inclus dans ce projet.
+
+---
+
 ## Pour les utilisateurs non techniques
 
 ### Prérequis
@@ -56,5 +66,3 @@ Assurez-vous de remplacer `<chemin vers le fichier Excel>` et `<dossier de sorti
 Le script Python affiche les erreurs dans la console et les enregistre dans `conversion_errors.log` lorsqu'exécuté via `converter.bat`.
 
 ---
-
-Ce README offre une vue d'ensemble claire du projet, expliquant à la fois comment l'utiliser sans connaissance technique préalable et comment il fonctionne pour ceux qui souhaitent en savoir plus sur le processus technique ou l'adapter à leurs besoins.

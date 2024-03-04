@@ -47,7 +47,7 @@ python desk_tool_converter.py <source_path> <output_folder>
 
 ### Traitement des Erreurs
 
-Les erreurs rencontrées pendant la conversion sont enregistrées dans `conversion_errors.log` pour un débogage facile.
+Les erreurs rencontrées pendant la conversion sont enregistrées dans `conversionLogs.log` pour un débogage facile.
 
 ---
 

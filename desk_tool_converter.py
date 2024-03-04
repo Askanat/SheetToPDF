@@ -1,5 +1,5 @@
 #####################################################################
-# Sheet To PDF converter                                            #
+# Document To PDF converter PDF to Document                         #
 #                                                                   #
 # Ce script convertit des feuilles Excel en documents PDF.          #
 #                                                                   #
@@ -14,6 +14,8 @@
 import win32com.client
 import os
 import sys
+import comtypes.client
+from pdf2docx import Converter
 
 def convert_sheet_to_pdf(sheet, output_path):
     """Exporte une feuille Excel donnée en PDF au chemin spécifié."""
@@ -44,11 +46,41 @@ def convert_excel_to_pdf(source_path, output_folder):
         workbook.Close(SaveChanges=False)
         excel.Quit()
 
+def convert_word_to_pdf(source_path, output_path):
+    """Convertit un document Word en PDF."""
+    word = comtypes.client.CreateObject('Word.Application')
+    word.Visible = False
+    doc = word.Documents.Open(source_path)
+    doc.SaveAs(output_path, FileFormat=17)  # 17 représente le format PDF dans Word
+    doc.Close()
+    word.Quit()
+
+def convert_pdf_to_word(source_path, output_path):
+    """Convertit un PDF en document Word."""
+    cv = Converter(source_path)
+    cv.convert(output_path, start=0, end=None)
+    cv.close()
+
+def auto_convert_file(source_path, output_folder):
+    """Détermine le type de fichier source et effectue la conversion appropriée."""
+    _, ext = os.path.splitext(source_path)
+    output_path = os.path.join(output_folder, os.path.splitext(os.path.basename(source_path))[0])
+
+    if ext.lower() in ['.xls', '.xlsx']:
+        convert_excel_to_pdf(source_path, output_folder)
+    elif ext.lower() in ['.doc', '.docx']:
+        convert_word_to_pdf(source_path, f"{output_path}.pdf")
+    elif ext.lower() == '.pdf':
+        convert_pdf_to_word(source_path, f"{output_path}.docx")
+    else:
+        print("Format de fichier non pris en charge.")
+
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("Usage: convert_excel_to_pdf.py <source_path> <output_folder>")
+        print("Usage: script.py <source_path> <output_folder>")
         sys.exit(1)
     
     source_path = sys.argv[1]
     output_folder = sys.argv[2]
-    convert_excel_to_pdf(source_path, output_folder)
+
+    auto_convert_file(source_path, output_folder)

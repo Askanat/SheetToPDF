@@ -1,6 +1,6 @@
 @echo off
 chcp 65001 >nul
-SETLOCAL EnableExtensions
+SETLOCAL EnableExtensions EnableDelayedExpansion
 cls
 
 echo.
@@ -19,14 +19,13 @@ echo ╚════██║██╔══██║██╔══╝  ██�
 echo ███████║██║  ██║███████╗███████╗   ██║          ██║   ╚██████╔╝╚██████╔╝███████╗
 echo ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝   ╚═╝          ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝
 echo.
-
 echo ---------------------------------------------------------
-echo Bienvenue dans l'assistant de conversion Excel vers PDF!
+echo Vérification des prérequis!
 echo ---------------------------------------------------------
 echo.
 
 :: Création d'un fichier de logs pour les erreurs
-set "logFile=%~dp0conversion_errors.log"
+set "logFile=%~dp0conversionLogs.log"
 
 :: Vérification de la présence de Python 3
 echo Vérification de Python 3 en cours...
@@ -58,38 +57,93 @@ echo.
 
 :: Installation des bibliothèques nécessaires
 echo Installation des bibliothèques nécessaires...
-python -m pip install pypiwin32 >nul 2>>"%logFile%"
+python -m pip install pywin32 comtypes pdf2docx >nul 2>>"%logFile%"
 echo.
 echo Les bibliothèques nécessaires ont été installées.
+
 echo.
 
-:: Interaction avec l'utilisateur pour les chemins des fichiers
-echo ----------------------------------------------------------------
-echo Veuillez glisser et déposer le fichier Excel à convertir ici puis appuyez sur Entrée.
-set /p source_path="Chemin du fichier source: "
+echo ---------------------------------------------------------
+echo Bienvenue dans l'assistant de conversion de documents!
+echo ---------------------------------------------------------
+
 echo.
 
-echo ----------------------------------------------------------------
-echo Veuillez glisser et déposer le dossier où vous souhaitez sauvegarder les PDFs puis appuyez sur Entrée.
-echo Si vous souhaitez utiliser le répertoire courant, laissez simplement vide et appuyez sur Entrée.
+:main_loop
+echo Veuillez glisser et déposer un ou plusieurs fichiers séparé par un espace, ou un dossier, puis appuyez sur Entrée.
+set /p input="Entrée: "
+echo.
 set /p output_folder="Chemin du dossier de sortie (facultatif): "
-echo.
-
-:: Vérification du chemin de sortie
-if "%output_folder%"=="" set output_folder=%cd%
-
-:: Exécution du script Python avec les chemins
-echo ----------------------------------------------------------------
-echo Conversion en cours, veuillez patienter...
-python SheetToPDF.py "%source_path%" "%output_folder%" >nul 2>>"%logFile%"
-if %errorlevel% neq 0 (
-    echo Une erreur est survenue pendant la conversion. Veuillez consulter le fichier de logs pour plus de détails.
-    goto End
+if "!output_folder!"=="" (
+    set "output_folder=%cd%\ResultatConversion"
 )
 
-echo.
-echo La conversion est terminée. Vérifiez vos PDFs dans le dossier spécifié.
-echo Merci d'avoir utilisé cet assistant de conversion.
+:: Crée le dossier s'il n'existe pas déjà
+if not exist "!output_folder!" (
+    mkdir "!output_folder!"
+)
 
-:End
+set "input=!input:"=!"
+if "!input!"=="" goto ask_continue
+
+:: Détermine si l'entrée est un dossier
+if exist "!input!\*" (
+    echo Dossier détecté.
+    set "source_folder=!input!"
+    goto process_folder
+) else if exist "!input!" (
+    echo Fichier détecté.
+    set "output_folder=%cd%\ResultatConversion"
+    if not exist "!output_folder!" mkdir "!output_folder!"
+    call :process_file "!input!"
+    goto ask_continue
+) else (
+    echo Ni un dossier valide ni un fichier détecté.
+    goto ask_continue
+)
+
+:: Traitement de plusieurs fichiers ou d'un seul fichier
+set "output_folder=%cd%"
+echo.
+:process_files
+for %%i in (!input!) do (
+    call :process_file "%%~fi"
+)
+goto ask_continue
+
+:process_folder
+echo Traitement du dossier: !source_folder!
+for /r "%source_folder%" %%f in (*.*) do (
+    call :process_file "%%f"
+)
+goto ask_continue
+
+:process_file
+set "file_path=%~1"
+echo ----------------------------------------------------------------
+echo Traitement de: %file_path%
+
+:: Appel du script Python
+echo %date% %time% - Début de la conversion de: %file_path% >> "%logFile%"
+python desk_tool_converter.py "%file_path%" "%output_folder%" >nul 2>>"%logFile%"
+
+if !errorlevel! neq 0 (
+    echo %date% %time% - Une erreur est survenue pendant la conversion de: %file_path% >> "%logFile%"
+    echo Une erreur est survenue pendant la conversion de: %file_path%. Consultez le fichier de logs pour plus de détails.
+) else (
+    echo %date% %time% - La conversion de: %file_path% est terminée. >> "%logFile%"
+    echo La conversion de: %file_path% est terminée. Vérifiez vos documents dans le dossier de sortie : "%output_folder%".
+)
+goto :eof
+
+:ask_continue
+echo.
+echo Voulez-vous convertir d'autres fichiers ou dossiers ? (O/N)
+set /p continue="Réponse: "
+if /i "!continue!"=="O" goto main_loop
+
+:end
+echo ----------------------------------------------------------------
+echo Merci d'avoir utilisé cet assistant de conversion.
+echo ----------------------------------------------------------------
 pause

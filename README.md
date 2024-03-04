@@ -1,68 +1,54 @@
-# SheetToPDF
+# Document Conversion Toolkit
 
-Ce projet fournit un ensemble de scripts permettant de convertir des feuilles Excel en documents PDF. Le processus est automatisé à l'aide d'un script batch (`converter.bat`) qui prépare l'environnement et lance le script Python (`SheetToPDF.py`) pour effectuer la conversion.
+Ce toolkit permet de convertir facilement des documents entre différents formats, notamment de feuilles Excel en PDF, de documents Word en PDF, et inversement de PDF en documents Word.
 
----
+## Pour les Utilisateurs Non Techniques
 
-## Licence
+### Comment Utiliser
 
-Ce projet est sous licence MIT. Cela signifie que vous êtes libre de l'utiliser, de le modifier et de le distribuer, à condition d'inclure l'avis de licence original et les conditions de la licence dans toute copie ou version substantielle du logiciel.
+1. **Prérequis :** Assurez-vous que Python 3 est installé sur votre ordinateur. Si ce n'est pas le cas, le script d'installation tentera de l'installer pour vous.
+2. **Lancement :** Double-cliquez sur le fichier `convert_tool.bat`. Une fenêtre de commande s'ouvrira.
+3. **Conversion :** Suivez les instructions à l'écran. Vous serez invité à glisser-déposer les fichiers ou dossiers que vous souhaitez convertir. Ensuite, indiquez le dossier où vous souhaitez sauvegarder les résultats. Si vous ne spécifiez pas de dossier, les fichiers seront sauvegardés dans un nouveau dossier `ResultatConversion` dans votre répertoire actuel.
+4. **Résultats :** Une fois la conversion terminée, vous trouverez vos fichiers convertis dans le dossier de sortie spécifié.
 
-Pour plus de détails sur la licence, veuillez consulter le fichier `LICENSE` inclus dans ce projet.
+### Problèmes Communs
 
----
+- **Python non installé :** Le script tentera d'installer Python automatiquement. Suivez les instructions à l'écran si une intervention est nécessaire.
+- **Dossier de sortie non spécifié :** Si aucun chemin de sortie n'est fourni, les fichiers seront sauvegardés dans un dossier `ResultatConversion` par défaut.
 
-## Pour les utilisateurs non techniques
+## Pour les Développeurs
 
-### Prérequis
+### Configuration
 
-- Windows 7 ou supérieur.
-- Accès à Internet pour l'installation automatique de Python, si nécessaire.
+- **Python 3.x** est requis. Le script vérifie sa présence et tente une installation automatique si nécessaire.
+- **Dépendances Python :** `pywin32`, `comtypes`, `pdf2docx`. Elles sont installées automatiquement par le script.
 
-### Comment utiliser
+### Utilisation
 
-1. **Lancer le script `converter.bat`** : Double-cliquez sur le fichier `converter.bat`. Une fenêtre de commande s'ouvrira.
-2. **Sélection du fichier Excel** : Lorsque le script demande le chemin du fichier Excel à convertir, glissez-déposez le fichier dans la fenêtre de commande, puis appuyez sur Entrée.
-3. **Sélection du dossier de sortie** : Lorsque le script demande où sauvegarder les PDFs, glissez-déposez le dossier de destination dans la fenêtre de commande. Si vous souhaitez utiliser le répertoire courant, appuyez simplement sur Entrée sans entrer de chemin.
-4. **Attente de la conversion** : Le script effectuera la conversion et affichera un message une fois terminée. Les fichiers PDF seront situés dans le dossier spécifié.
+Le script principal `desk_tool_converter.py` peut être utilisé indépendamment avec les arguments de ligne de commande suivants :
 
-### En cas d'erreur
-
-Si une erreur survient, consultez le fichier `conversion_errors.log` généré dans le même dossier que le script pour plus de détails.
-
-## Pour les développeurs
-
-### Dépendances
-
-- Python 3.x
-- Bibliothèques Python : `win32com.client`
-- Le script utilise `pip` pour installer automatiquement les dépendances nécessaires.
-
-### Fonctionnement du script
-
-**`converter.bat`** :
-- Vérifie la présence de Python et l'installe si nécessaire.
-- Installe `pip` et les dépendances requises.
-- Demande à l'utilisateur le chemin du fichier Excel et le dossier de sortie.
-- Exécute `SheetToPDF.py` avec les chemins fournis comme arguments.
-
-**`SheetToPDF.py`** :
-- Utilise `win32com.client` pour ouvrir le fichier Excel spécifié.
-- Convertit chaque feuille du classeur en un fichier PDF séparé, en appliquant des paramètres de mise en page prédéfinis.
-- Sauvegarde chaque PDF dans le dossier de sortie spécifié.
-
-### Utilisation en ligne de commande
-
-Pour exécuter directement `SheetToPDF.py` sans passer par `converter.bat`, utilisez la commande suivante dans un terminal :
-
-```bash
-python SheetToPDF.py "<chemin vers le fichier Excel>" "<dossier de sortie>"
+```sh
+python desk_tool_converter.py <source_path> <output_folder>
 ```
 
-Assurez-vous de remplacer `<chemin vers le fichier Excel>` et `<dossier de sortie>` par les chemins appropriés.
+- `<source_path>` : Chemin vers le fichier ou le dossier à convertir.
+- `<output_folder>` : Chemin vers le dossier de sortie pour les fichiers convertis.
 
-### Gestion des erreurs
+### Script Batch
 
-Le script Python affiche les erreurs dans la console et les enregistre dans `conversion_errors.log` lorsqu'exécuté via `converter.bat`.
+`convert_tool.bat` sert d'interface pour faciliter l'utilisation du script Python par les utilisateurs finaux. Il gère l'installation des prérequis, la saisie utilisateur et l'appel au script Python avec les paramètres appropriés.
+
+### Fonctions de Conversion
+
+- `convert_sheet_to_pdf(sheet, output_path)` : Convertit une feuille Excel en PDF.
+- `convert_excel_to_pdf(source_path, output_folder)` : Convertit un classeur Excel en PDF (toutes les feuilles).
+- `convert_word_to_pdf(source_path, output_path)` : Convertit un document Word en PDF.
+- `convert_pdf_to_word(source_path, output_path)` : Convertit un PDF en document Word.
+
+### Traitement des Erreurs
+
+Les erreurs rencontrées pendant la conversion sont enregistrées dans `conversion_errors.log` pour un débogage facile.
 
 ---
+
+Ce README offre un guide complet pour les utilisateurs de tous niveaux et fournit les détails nécessaires pour les développeurs souhaitant comprendre ou étendre la fonctionnalité des scripts.

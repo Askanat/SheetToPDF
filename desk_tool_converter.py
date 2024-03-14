@@ -68,7 +68,7 @@ def auto_convert_file(source_path, output_folder):
     _, ext = os.path.splitext(source_path)
     output_path = os.path.join(output_folder, os.path.splitext(os.path.basename(source_path))[0])
 
-    if ext.lower() in ['.xlsx']:
+    if ext.lower() in ['.xls', '.xlsx']:
         print(output_path)
         convert_excel_to_pdf(source_path, output_folder)
     elif ext.lower() in ['.doc', '.docx']:

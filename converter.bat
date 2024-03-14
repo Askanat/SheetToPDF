@@ -65,7 +65,7 @@ echo.
 
 :: Installation des bibliothèques nécessaires
 echo Installation des bibliothèques nécessaires...
-python -m pip install openpyxl reportlab pywin32 comtypes pdf2docx >nul 2>>"%logFile%"
+python -m pip install pywin32 comtypes pdf2docx >nul 2>>"%logFile%"
 echo.
 echo Les bibliothèques nécessaires ont été installées.
 

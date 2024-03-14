@@ -3,7 +3,6 @@ chcp 65001 >nul
 SETLOCAL EnableExtensions EnableDelayedExpansion
 title Conversion Toolkit
 cls
-
 echo.
 echo ---------------------------------------------------------
 echo Ce logiciel est sous licence MIT. Pour plus d'informations, consultez le fichier LICENSE.

@@ -17,29 +17,31 @@ import sys
 import comtypes.client
 from pdf2docx import Converter
 
-def convert_sheet_to_pdf(sheet, output_path):
-    """Exporte une feuille Excel donnée en PDF au chemin spécifié."""
-    # Appliquer les paramètres de mise en page
-    sheet.PageSetup.Orientation = win32com.client.constants.xlLandscape
-    sheet.PageSetup.Zoom = False
-    sheet.PageSetup.FitToPagesWide = 1
-    sheet.PageSetup.FitToPagesTall = False
-
-    # Exporter directement la feuille en PDF
-    sheet.ExportAsFixedFormat(Type=win32com.client.constants.xlTypePDF, Filename=output_path)
-
 def convert_excel_to_pdf(source_path, output_folder):
-    excel = win32com.client.Dispatch("Excel.Application")
-    excel.Visible = False  # Rend l'application Excel invisible
+    # Assurez-vous que le répertoire de sortie existe
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
 
+    # Génère les bibliothèques de type COM si nécessaire
+    excel = win32com.client.gencache.EnsureDispatch('Excel.Application')
+    
     try:
         workbook = excel.Workbooks.Open(source_path)
-        
-        # Itérer sur chaque feuille et l'exporter en PDF
+        excel.Visible = False  # Rend l'application Excel invisible
+
         for sheet in workbook.Worksheets:
             output_path = os.path.join(output_folder, f"{sheet.Name}.pdf")
-            convert_sheet_to_pdf(sheet, output_path)
+            
+            # Appliquer les paramètres de mise en page
+            sheet.PageSetup.Orientation = win32com.client.constants.xlLandscape
+            sheet.PageSetup.Zoom = False
+            sheet.PageSetup.FitToPagesWide = 1
+            sheet.PageSetup.FitToPagesTall = False
 
+            # Exporter directement la feuille en PDF
+            sheet.ExportAsFixedFormat(Type=win32com.client.constants.xlTypePDF, Filename=output_path)
+            print(f"Feuille {sheet.Name} convertie en PDF à {output_path}")
+            
     except Exception as e:
         print(f"Erreur lors de la conversion : {e}")
     finally:
@@ -66,7 +68,8 @@ def auto_convert_file(source_path, output_folder):
     _, ext = os.path.splitext(source_path)
     output_path = os.path.join(output_folder, os.path.splitext(os.path.basename(source_path))[0])
 
-    if ext.lower() in ['.xls', '.xlsx']:
+    if ext.lower() in ['.xlsx']:
+        print(output_path)
         convert_excel_to_pdf(source_path, output_folder)
     elif ext.lower() in ['.doc', '.docx']:
         convert_word_to_pdf(source_path, f"{output_path}.pdf")
